@@ -5,54 +5,37 @@ using namespace std;
 class Solution
 {
 public:
-    vector<int> twoSum(vector<int> &numbers, int target)
+    bool isPalindrome(string s)
     {
-        for (int i = 0; i < numbers.size(); ++i)
+        int l = 0;
+        int r = s.size() - 1;
+        while (l < r)
         {
-            int low = i + 1, high = numbers.size() - 1;
-            while (low <= high)
+            while (!isalnum(s[l]) && l < r)
             {
-                int mid = (high - low) / 2 + low;
-                if (numbers[mid] == target - numbers[i])
-                {
-                    return {i + 1, mid + 1};
-                }
-                else if (numbers[mid] > target - numbers[i])
-                {
-                    high = mid - 1;
-                }
-                else
-                {
-                    low = mid + 1;
-                }
+                ++l;
             }
-        }
-        return {-1, -1};
-    }
-};
+            while (!isalnum(s[r]) && l < r)
+            {
+                --r;
+            }
 
-class Solution
-{
-public:
-    vector<int> twoSum(vector<int> &numbers, int target)
-    {
-        int low = 0, high = numbers.size() - 1;
-        while (low < high)
-        {
-            int sum = numbers[low] + numbers[high];
-            if (sum == target)
+            if (s[l] < 'a')
             {
-                return {low + 1, high + 1};
+                s[l] += 32;
             }
-            else if (sum < target)
+            if (s[r] < 'a')
             {
-                ++low;
+                s[r] += 32;
             }
-            else
+
+            if (s[r] != s[l])
             {
-                --high;
+                return false;
             }
+            ++l;
+            --r;
         }
-        return {-1, -1};
+        return true;
     }
 };
