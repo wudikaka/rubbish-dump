@@ -5,44 +5,62 @@ using namespace std;
 class Solution
 {
 public:
-    int search(vector<int> &nums, int target)
+    bool searchMatrix(vector<vector<int>> &matrix, int target)
     {
-        int left = 0, right = nums.size() - 1;
+        int m = matrix.size();    // m行
+        int n = matrix[0].size(); // n列
 
-        while (left <= right)
+        vector<int> perLineMax; // 每行最后一列--最大值
+        for (int i = 0; i < m; i++)
         {
-            int mid = left + (right - left) / 2;
-
-            if (nums[mid] == target)
-            {
-                return mid;
-            }
-
-            // 判断哪一半是有序的
-            if (nums[left] <= nums[mid])
-            { // 左半部分有序
-                if (target >= nums[left] && target < nums[mid])
-                {
-                    right = mid - 1; // target在左半
-                }
-                else
-                {
-                    left = mid + 1; // target在右半
-                }
-            }
-            else
-            { // 右半部分有序
-                if (target > nums[mid] && target <= nums[right])
-                {
-                    left = mid + 1; // target在右半
-                }
-                else
-                {
-                    right = mid - 1; // target在左半
-                }
-            }
+            perLineMax.push_back(matrix[i][n - 1]);
         }
 
-        return -1;
+        // 找target可能在哪行
+        // 找第一个 > target 的元素
+        int line;
+        int low = 0;
+        int high = m - 1;
+        int mid;
+        while (low <= high)
+        {
+            mid = low + (high - low) / 2;
+            if (perLineMax[mid] < target)
+            {
+                low = mid + 1;
+            }
+            else if (perLineMax[mid] > target)
+            {
+                high = mid - 1;
+            }
+            else
+            {
+                return 1;
+            }
+        }
+        if (low > m - 1)
+            return 0;
+
+        line = low;
+
+        int l = 0;
+        int r = n - 1;
+        while (l <= r)
+        {
+            mid = l + (r - l) / 2;
+            if (matrix[line][mid] == target)
+            {
+                return 1;
+            }
+            else if (matrix[line][mid] < target)
+            {
+                l = mid + 1;
+            }
+            else
+            {
+                r = mid - 1;
+            }
+        }
+        return 0;
     }
 };
